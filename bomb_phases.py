@@ -235,6 +235,10 @@ class Wires(PhaseThread):
         #TODO
         self.running = True
         while self.running:
+            for wire in self._component:
+                print(wire.direction)
+                print(wire.pull)
+            '''
             print(self._component , "self._component")
             # phases have a target value (e.g., a specific combination on the keypad, the proper jumper wires to "cut", etc)
             print(self._target , "self._target")
@@ -245,7 +249,7 @@ class Wires(PhaseThread):
             # phases have a value (e.g., a pushbutton can be True/Pressed or False/Released, several jumper wires can be "cut"/False, etc)
             print(self._value , "self._value")
             print(name + "name")
-            
+            '''
         pass
 
     # returns the jumper wires state as a string
