@@ -235,15 +235,15 @@ class Wires(PhaseThread):
         #TODO
         self.running = True
         while self.running:
-            print(self._component + "self._component")
+            print(self._component , "self._component")
             # phases have a target value (e.g., a specific combination on the keypad, the proper jumper wires to "cut", etc)
-            print(self._target + "self._target")
+            print(self._target , "self._target")
             # phases can be successfully defused
-            print(self._defused + "self._defused")
+            print(self._defused , "self._defused")
             # phases can be failed (which result in a strike)
-            print(self._failed + "self._failed")
+            print(self._failed , "self._failed")
             # phases have a value (e.g., a pushbutton can be True/Pressed or False/Released, several jumper wires can be "cut"/False, etc)
-            print(self._value + "self._value"
+            print(self._value , "self._value")
             print(name + "name")
             
         pass
