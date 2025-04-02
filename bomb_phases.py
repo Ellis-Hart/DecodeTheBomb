@@ -238,6 +238,7 @@ class Wires(PhaseThread):
             for wire in self._component:
                 print(wire.direction)
                 print(wire.pull)
+                print(wire.value)
             '''
             print(self._component , "self._component")
             # phases have a target value (e.g., a specific combination on the keypad, the proper jumper wires to "cut", etc)
