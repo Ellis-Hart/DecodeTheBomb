@@ -1,0 +1,13 @@
+-Base it off sports
+-Random colors
+-Press button at certain time on counter
+-Base switches off of binary
+-3 lives
+-Countdown sound
+-Explosion sound
+
+KEYPAD: Last year's football draft order
+	Example clue: "2024 draft, Bears, Browns, etc."
+	Example answer: Input their draft places in the keypad
+COLOR BUTTON: Press when it shows a color that matches the jersey of one of the teams
+WIRES: Get the numbers of the buildings around campus from the UT map. Tell user to "pull power" from the building by entering its number in binary using the wires
