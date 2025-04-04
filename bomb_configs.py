@@ -181,7 +181,8 @@ def genKeypadCombination():
 #  serial: the bomb's serial number
 #  toggles_target: the toggles phase defuse value
 #  wires_target: the wires phase defuse value
-serial, toggles_target, wires_target = genSerial()
+serial, toggles_target = genSerial()
+wires_target = 01010
 
 # generate the combination for the keypad phase
 #  keyword: the plaintext keyword for the lookup table
