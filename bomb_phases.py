@@ -231,14 +231,19 @@ class Wires(PhaseThread):
         super().__init__(name, component, target)
 
     # runs the thread
-    def run(self):
-        #TODO
-        self.running = True
-        while self.running:
-            for wire in self._component:
-                print(wire.value)
-                # Wire.value is used to check the True/False status of the wire being plugged in or not
-        pass
+def run(self):
+    currentVals = [1, 1, 1, 1, 1]
+    self.running = True
+
+    while self.running:
+        for i in range(len(self._component)):
+            currentVals[i] = self._component[i].value  # directly get each value
+
+        if currentVals == wires_target:
+            print("Defusal works")
+            self.running = False
+            return "DEFUSED"
+
 
     # returns the jumper wires state as a string
     def __str__(self):
