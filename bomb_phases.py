@@ -239,8 +239,6 @@ class Wires(PhaseThread):
                 print(wire.direction)
                 print(wire.pull)
                 print(wire.value)
-            if(self._value == self._target):
-                self._defused == True
             '''
             print(self._component , "self._component")
             # phases have a target value (e.g., a specific combination on the keypad, the proper jumper wires to "cut", etc)
