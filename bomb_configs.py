@@ -182,7 +182,7 @@ def genKeypadCombination():
 #  toggles_target: the toggles phase defuse value
 #  wires_target: the wires phase defuse value
 serial, toggles_target = genSerial()
-wires_target = 01010
+wires_target = [0, 1, 0, 1, 0]
 
 # generate the combination for the keypad phase
 #  keyword: the plaintext keyword for the lookup table
