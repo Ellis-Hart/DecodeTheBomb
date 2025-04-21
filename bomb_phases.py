@@ -242,7 +242,7 @@ class Wires(PhaseThread):
                 currentVals[i] = self._component[i].value  # directly get each value
 
             if currentVals == self._target:
-                print("Defusal works")
+                self._defused = True
                 self.running = False
                 return "DEFUSED"
 
