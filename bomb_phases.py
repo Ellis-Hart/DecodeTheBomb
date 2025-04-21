@@ -232,16 +232,14 @@ class Wires(PhaseThread):
 
     # runs the thread
     def run(self):
-        currentVals = [1, 1, 1, 1, 1]
+        wirecurrentVals = [1, 1, 1, 1, 1]
         self._running = True
         
         while self._running:
-            print("Current:", currentVals)
-            print("Target: ", self._target)
             for i in range(len(self._component)):
-                currentVals[i] = self._component[i].value  # directly get each value
+                wirecurrentVals[i] = self._component[i].value  # directly get each value
 
-            if currentVals == self._target:
+            if wirecurrentVals == self._target:
                 self._defused = True
                 self.running = False
                 return "DEFUSED"
@@ -313,13 +311,24 @@ class Toggles(PhaseThread):
 
     # runs the thread
     def run(self):
-        # TODO
-        pass
+        togglecurrentVals = [0, 0, 0, 0]
+        self._running = True
+        
+        while self._running:
+            print("Current:", currentVals)
+            print("Target: ", self._target)
+            for i in range(len(self._component)):
+                togglecurrentVals[i] = self._component[i].value  # directly get each value
+
+            if togglecurrentVals == self._target:
+                self._defused = True
+                self.running = False
+                return "DEFUSED"
 
     # returns the toggle switches state as a string
     def __str__(self):
         if (self._defused):
             return "DEFUSED"
         else:
-            # TODO
-            pass
+            #TODO
+            return "NOT DEFUSED"
