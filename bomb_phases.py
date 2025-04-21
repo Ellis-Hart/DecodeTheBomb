@@ -251,7 +251,7 @@ class Wires(PhaseThread):
             return "DEFUSED"
         else:
             #TODO
-            return "NOT DEFUSED"
+            return (f"Drawing power from {wires_hint}")
 
 # the pushbutton phase
 class Button(PhaseThread):
@@ -315,8 +315,6 @@ class Toggles(PhaseThread):
         self._running = True
         
         while self._running:
-            print("Current:", togglecurrentVals)
-            print("Target: ", self._target)
             for i in range(len(self._component)):
                 togglecurrentVals[i] = self._component[i].value  # directly get each value
             toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2)

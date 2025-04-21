@@ -118,7 +118,18 @@ def genSerial():
     # and make the serial number a string
     serial = "".join(serial)
 
-    return serial, toggle_value, jumper_value
+    return serial, toggle_value
+
+def genWireTarget():
+    buildingNo = randint(0, 30) #Generates a random int from 0-30 to be the target val for wires
+    buildings = [ "Athletic Offices", "Baseball Field", "Beach Volleyball Complex", "Aquatic Center", "Recreation Center", "Cass Gymnasium",
+                  "Martinez Athletics Center", "Tennis Complex", "Intramural Complex", "Softball Complex", "Pepin Stadium", "Pickleball Courts",
+                  "Track", "Austin Hall", "Barrymore Hotel", "Brevard Hall", "Grand Center", "Jenkins Hall", "McKay Hall", "Morsani Hall",
+                  "Palm Apartments", "Smiley Hall", "Straz Hall", "Urso Hall", "Vaughn Center", "Admissions", "Bailey Art Studios", "Bookstore",
+                  "Campus Safety", "Cass Building"]
+    buildingClue = buildings[buildingNo]
+    return buildingNo, buildingClue
+    
 
 # generates the keypad combination from a keyword and rotation key
 def genKeypadCombination():
@@ -181,8 +192,8 @@ def genKeypadCombination():
 #  serial: the bomb's serial number
 #  toggles_target: the toggles phase defuse value
 #  wires_target: the wires phase defuse value
-serial, toggles_target, wires_target = genSerial()
-wires_target = [0, 1, 0, 1, 0]
+serial, toggles_target = genSerial()
+wires_target, wires_hint = genWireTarget()
 
 # generate the combination for the keypad phase
 #  keyword: the plaintext keyword for the lookup table
