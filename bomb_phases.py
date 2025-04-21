@@ -234,7 +234,9 @@ class Wires(PhaseThread):
     def run(self):
         currentVals = [1, 1, 1, 1, 1]
         self._running = True
-
+        print("Current:", currentVals)
+        print("Target: ", self._target)
+        
         while self.running:
             for i in range(len(self._component)):
                 currentVals[i] = self._component[i].value  # directly get each value
