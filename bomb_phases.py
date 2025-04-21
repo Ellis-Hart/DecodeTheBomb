@@ -234,10 +234,10 @@ class Wires(PhaseThread):
     def run(self):
         currentVals = [1, 1, 1, 1, 1]
         self._running = True
-        print("Current:", currentVals)
-        print("Target: ", self._target)
         
-        while self.running:
+        while self._running:
+            print("Current:", currentVals)
+            print("Target: ", self._target)
             for i in range(len(self._component)):
                 currentVals[i] = self._component[i].value  # directly get each value
 
@@ -252,8 +252,8 @@ class Wires(PhaseThread):
         if (self._defused):
             return "DEFUSED"
         else:
-            # TODO
-            pass
+            #TODO
+            return "NOT DEFUSED"
 
 # the pushbutton phase
 class Button(PhaseThread):
