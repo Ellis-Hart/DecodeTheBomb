@@ -319,7 +319,7 @@ class Toggles(PhaseThread):
             print("Target: ", self._target)
             for i in range(len(self._component)):
                 togglecurrentVals[i] = self._component[i].value  # directly get each value
-            toggledecimalVal = int("".join(str(bit) for bit in togglecurrentVals), 2) #Converts the current toggle list value into an integer created from the binary string
+            toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2)
 
             if toggledecimalVal == self._target:
                 self._defused = True
