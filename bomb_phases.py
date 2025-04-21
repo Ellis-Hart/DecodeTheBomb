@@ -312,15 +312,18 @@ class Toggles(PhaseThread):
     # runs the thread
     def run(self):
         togglecurrentVals = [0, 0, 0, 0]
+        toggledecimalVal = int("".join(str(bit) for bit in togglecurrentVals), 2) #Converts the current toggle list value into an integer created from the binary string
         self._running = True
+
+
         
         while self._running:
-            print("Current:", currentVals)
+            print("Current:", togglecurrentVals)
             print("Target: ", self._target)
             for i in range(len(self._component)):
                 togglecurrentVals[i] = self._component[i].value  # directly get each value
 
-            if togglecurrentVals == self._target:
+            if toggledecimalVal == self._target:
                 self._defused = True
                 self.running = False
                 return "DEFUSED"
