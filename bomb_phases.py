@@ -238,8 +238,8 @@ class Wires(PhaseThread):
         while self._running:
             for i in range(len(self._component)):
                 wirecurrentVals[i] = self._component[i].value  # directly get each value
-                print(f"Wire current: {wiredecimalVal}")
             wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2) #Converts the list of true/false to an int for target val
+            print(f"Wire current: {wiredecimalVal}")
 
             if wiredecimalVal == self._target:
                 self._defused = True
@@ -319,8 +319,8 @@ class Toggles(PhaseThread):
         while self._running:
             for i in range(len(self._component)):
                 togglecurrentVals[i] = self._component[i].value  # directly get each value
-                print(f"Toggle current: {toggledecimalVal}")
             toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2)
+            print(f"Toggle current: {toggledecimalVal}")
 
             if toggledecimalVal == self._target:
                 self._defused = True
