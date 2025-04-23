@@ -168,7 +168,7 @@ def genKeypadCombination():
     rot = random.randint(1, 25)
 
     # pick a keyword and matching passphrase
-    keyword, passphrase = choice(list(keywords.items()))
+    keyword, passphrase = random.choice(list(keywords.items()))
     # encrypt the passphrase and get its combination
     cipher_keyword = encrypt(keyword, rot)
     combination = digits(passphrase)
