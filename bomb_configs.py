@@ -111,7 +111,7 @@ def genSerial():
     return '-'.join(parts)
 
 def genWireTarget():
-    buildingNo = randint(0, 30) #Generates a random int from 0-30 to be the target val for wires
+    buildingNo = random.randint(0, 30) #Generates a random int from 0-30 to be the target val for wires
     buildings = [ "Athletic Offices", "Baseball Field", "Beach Volleyball Complex", "Aquatic Center", "Recreation Center", "Cass Gymnasium",
                   "Athletics Center", "Tennis Complex", "Intramural Complex", "Softball Complex", "Pepin Stadium", "Pickleball Courts",
                   "Track", "Austin Hall", "Barrymore Hotel", "Brevard Hall", "Grand Center", "Jenkins Hall", "McKay Hall", "Morsani Hall",
