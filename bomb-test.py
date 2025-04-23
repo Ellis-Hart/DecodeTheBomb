@@ -194,35 +194,80 @@ class Wires(PhaseThread):
 class Button(PhaseThread):
     colors = [ "R", "G", "B" ]  # the button's possible colors
 
-    def __init__(self, state, rgb, name="Button"):
+    def __init__(self, state, rgb, year, name="Button"):
         super().__init__(name)
         self._value = False
-        # the pushbutton's state pin
         self._state = state
-        # the pushbutton's LED pins
         self._rgb = rgb
+        self.year = year  # Store the year (for extracting the target value)
+        self.button_color = None  # Store the randomly chosen button color
+        self.button_target = None  # Store the target value for defusal
+        self.defused = False  # Track if the bomb is defused or not
+        
 
     # runs the thread
     def run(self):
         self._running = True
-        # initialize and index and counter to help iterate through the RGB colors
-        rgb_index = 0
-        rgb_counter = 0
-        while (True):
-            # set the LED to the current color
-            self._rgb[0].value = False if Button.colors[rgb_index] == "R" else True
-            self._rgb[1].value = False if Button.colors[rgb_index] == "G" else True
-            self._rgb[2].value = False if Button.colors[rgb_index] == "B" else True
-            # get the pushbutton's state
+        
+        # Randomly choose a button color (R, G, or B) at the start
+        self.button_color = random.choice(Button.colors)
+
+        # Set the RGB LEDs to the chosen color
+        if self.button_color == "R":
+            self._rgb[0].value = False  # Red LED on
+            self._rgb[1].value = True   # Green LED off
+            self._rgb[2].value = True   # Blue LED off
+        elif self.button_color == "G":
+            self._rgb[0].value = True   # Red LED off
+            self._rgb[1].value = False  # Green LED on
+            self._rgb[2].value = True   # Blue LED off
+        elif self.button_color == "B":
+            self._rgb[0].value = True   # Red LED off
+            self._rgb[1].value = True   # Green LED off
+            self._rgb[2].value = False  # Blue LED on
+
+        # Set the target value based on the button color
+        self.set_button_target()
+
+        while True:
+            # Get the button state
             self._value = self._state.value
-            # increment the RGB counter
-            rgb_counter += 1
-            # switch to the next RGB color every 1s (10 * 0.1s = 1s)
-            if (rgb_counter == 10):
-                rgb_index = (rgb_index + 1) % len(Button.colors)
-                rgb_counter = 0
+
+            # Button color defusal logic
+            if self._value and not self.defused:
+                self.defuse_logic()
+
             sleep(0.1)
+        
         self._running = False
+        
+    def set_button_target(self):
+        """Set the button's target value based on the color."""
+        if self.button_color == "R":
+            self.button_target = str(self.year)[-1]  # Last digit of the year
+        elif self.button_color == "G":
+            self.button_target = str(self.year)[-2]  # Second last digit of the year
+        elif self.button_color == "B":
+            self.button_target = str(self.year)[0]   # First digit of the year
+
+    def defuse_logic(self):
+        # Check if the timer value matches the button target
+        if self.timer_matches_target():
+            self.defused = True
+            # Turn off all LEDs when the bomb is defused
+            self._rgb[0].value = False  # Turn off the red LED
+            self._rgb[1].value = False  # Turn off the green LED
+            self._rgb[2].value = False  # Turn off the blue LED
+
+    def timer_matches_target(self):
+        # Get the current timer value to compare it with the target
+        current_time = self.get_current_time()
+        if current_time[-1] == self.button_target:
+            return True
+        return False
+
+    def get_current_time(self):
+        return str(self._timer._min) + str(self._timer._sec)
 
     def __str__(self):
         return "Pressed" if self._value else "Released"
