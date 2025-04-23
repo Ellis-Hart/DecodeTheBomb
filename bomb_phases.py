@@ -253,7 +253,7 @@ class Wires(PhaseThread):
             return "DEFUSED"
         else:
             #TODO
-            return (f"Drawing power from {wires_hint}")
+            return (f"Power source: {wires_hint}")
 
 # the pushbutton phase
 class Button(PhaseThread):
@@ -290,6 +290,22 @@ class Button(PhaseThread):
                 current_digit = str(minutes).zfill(2)[-1]  # last digit of minutes
             else:
                 current_digit = None
+                
+            if button_color == "R":
+                # Set the button to red
+                component_button_RGB[0].value = True  # Red
+                component_button_RGB[1].value = False  # Green
+                component_button_RGB[2].value = False  # Blue
+            elif button_color == "G":
+                # Set the button to green
+                component_button_RGB[0].value = False  # Red
+                component_button_RGB[1].value = True  # Green
+                component_button_RGB[2].value = False  # Blue
+            elif button_color == "B":
+                # Set the button to blue
+                component_button_RGB[0].value = False  # Red
+                component_button_RGB[1].value = False  # Green
+                component_button_RGB[2].value = True  # Blue
 
             # If the button is pressed
             if self.component_button_state.value:
@@ -342,4 +358,4 @@ class Toggles(PhaseThread):
             return "DEFUSED"
         else:
             #TODO
-            return "NOT DEFUSED"
+            return ""
