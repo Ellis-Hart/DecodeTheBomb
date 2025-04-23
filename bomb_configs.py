@@ -195,7 +195,7 @@ wires_target, wires_hint = genWireTarget()
 keyword, cipher_keyword, rot, keypad_target, passphrase = genKeypadCombination()
 
 # generate the color of the pushbutton (which determines how to defuse the phase)
-button_color = choice(["R", "G", "B"])
+button_color = random.choice(["R", "G", "B"])
 # appropriately set the target (R is None)
 button_target = None
 # G is the first numeric digit in the serial number
