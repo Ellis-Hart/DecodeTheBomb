@@ -182,6 +182,13 @@ class Timer(PhaseThread):
         self._paused = not self._paused
         # blink the 7-segment display when paused
         self._component.blink_rate = (2 if self._paused else 0)
+        
+    def get_time(self):
+        return f"{self._min}:{self._sec}"
+    
+    def get_current_time(self):
+        return self._timer.get_time()
+
 
     # returns the timer as a string (mm:ss)
     def __str__(self):
@@ -318,7 +325,7 @@ class Button(PhaseThread):
     def defuse_logic(self):
         # Check if the timer value matches the button target
         if self.timer_matches_target():
-            self.defused = True
+            self._defused = True
             # Turn off all LEDs when the bomb is defused
             self._rgb[0].value = True  # Red LED off
             self._rgb[1].value = True  # Green LED off
