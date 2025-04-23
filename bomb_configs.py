@@ -116,7 +116,7 @@ def genWireTarget():
                   "Athletics Center", "Tennis Complex", "Intramural Complex", "Softball Complex", "Pepin Stadium", "Pickleball Courts",
                   "Track", "Austin Hall", "Barrymore Hotel", "Brevard Hall", "Grand Center", "Jenkins Hall", "McKay Hall", "Morsani Hall",
                   "Palm Apartments", "Smiley Hall", "Straz Hall", "Urso Hall", "Vaughn Center", "Admissions", "Bailey Art Studios", "Bookstore",
-                  "Campus Safety", "Cass Building"]
+                  "Campus Safety", "Cass Building", "Central Receiving"]
     buildingClue = buildings[buildingNo]
     return buildingNo, buildingClue
     
