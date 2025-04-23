@@ -195,19 +195,33 @@ class Button(PhaseThread):
     colors = ["R", "G", "B"]  # The button's possible colors
 
     def __init__(self, state, rgb, year, name="Button"):
-        super().__init__(name)
+        super().__init__(name)  # Initialize the parent class
         self._value = False
         self._state = state
         self._rgb = rgb
         self.year = year  # Store the year (for extracting the target value)
         self.button_color = None  # Store the randomly chosen button color
         self.button_target = None  # Store the target value for defusal
-        self.defused = False  # Track if the bomb is defused or not
+        self._defused = False  # Track if the bomb is defused or not
 
         # Ensure LEDs are initially turned off (before the button thread runs)
         self._rgb[0].value = True  # Red LED off
         self._rgb[1].value = True  # Green LED off
         self._rgb[2].value = True  # Blue LED off
+
+    @property
+    def defused(self):
+        return self._defused
+
+    @defused.setter
+    def defused(self, value):
+        # Set the defused status and turn off the LEDs when defused
+        self._defused = value
+        if value:
+            # Turn off all LEDs when the bomb is defused
+            self._rgb[0].value = True  # Red LED off
+            self._rgb[1].value = True  # Green LED off
+            self._rgb[2].value = True  # Blue LED off
 
     def run(self):
         self._running = True
@@ -242,11 +256,6 @@ class Button(PhaseThread):
 
             sleep(0.1)
 
-        # If bomb is defused, turn off all LEDs
-        self._rgb[0].value = True  # Red LED off
-        self._rgb[1].value = True  # Green LED off
-        self._rgb[2].value = True  # Blue LED off
-
         self._running = False
 
     def set_button_target(self):
@@ -260,11 +269,8 @@ class Button(PhaseThread):
     def defuse_logic(self):
         # Check if the timer value matches the button target
         if self.timer_matches_target():
-            self.defused = True
-            # Turn off all LEDs when the bomb is defused
-            self._rgb[0].value = True  # Red LED off
-            self._rgb[1].value = True  # Green LED off
-            self._rgb[2].value = True  # Blue LED off
+            self.defused = True 
+            # Turns off all LEDs when the bomb is defused
 
     def timer_matches_target(self):
         current_time = self.get_current_time()
@@ -277,6 +283,7 @@ class Button(PhaseThread):
 
     def __str__(self):
         return "Pressed" if self._value else "Released"
+
 
 
 # the toggle switches phase
