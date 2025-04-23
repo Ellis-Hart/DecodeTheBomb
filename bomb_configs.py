@@ -87,38 +87,28 @@ if (RPi):
 ###########
 # functions
 ###########
+
 # generates the bomb's serial number
-#  it should be made up of alphaneumeric characters, and include at least 3 digits and 3 letters
-#  the sum of the digits should be in the range 1..15 to set the toggles target
-#  the first three letters should be distinct and in the range 0..4 such that A=0, B=1, etc, to match the jumper wires
-#  the last letter should be outside of the range
+
 def genSerial():
-    # set the digits (used in the toggle switches phase)
-    serial_digits = []
-    toggle_value = randint(1, 15)
-    # the sum of the digits is the toggle value
-    while (len(serial_digits) < 3 or toggle_value - sum(serial_digits) > 0):
-        d = randint(0, min(9, toggle_value - sum(serial_digits)))
-        serial_digits.append(d)
-
-    # set the letters (used in the jumper wires phase)
-    jumper_indexes = [ 0 ] * 5
-    while (sum(jumper_indexes) < 3):
-        jumper_indexes[randint(0, len(jumper_indexes) - 1)] = 1
-    jumper_value = int("".join([ str(n) for n in jumper_indexes ]), 2)
-    # the letters indicate which jumper wires must be "cut"
-    jumper_letters = [ chr(i + 65) for i, n in enumerate(jumper_indexes) if n == 1 ]
-
-    # form the serial number
-    serial = [ str(d) for d in serial_digits ] + jumper_letters
-    # and shuffle it
-    shuffle(serial)
-    # finally, add a final letter (F..Z)
-    serial += [ choice([ chr(n) for n in range(70, 91) ]) ]
-    # and make the serial number a string
-    serial = "".join(serial)
-
-    return serial, toggle_value
+    #Generates a random year to hide within serial number. Used as a clue for keypad.
+    year = str(random.randint(2020, 2025))
+    
+    #Generate random segments
+    prefix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    middle = ''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
+    suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    
+    #Choose random positions to insert the word bomb and the year
+    parts = [prefix, middle, suffix]
+    insert_positions = random.sample([0, 1, 2], 2)
+    parts[insert_positions[0]] += "bomb"
+    parts[insert_positions[1]] += year
+    
+    #Shuffle parts for added randomness
+    random.shuffle(parts)
+    
+    return '-'.join(parts)
 
 def genWireTarget():
     buildingNo = randint(0, 30) #Generates a random int from 0-30 to be the target val for wires
@@ -192,7 +182,8 @@ def genKeypadCombination():
 #  serial: the bomb's serial number
 #  toggles_target: the toggles phase defuse value
 #  wires_target: the wires phase defuse value
-serial, toggles_target = genSerial()
+serial = genSerial()
+toggles_target = 1 #placeholder
 wires_target, wires_hint = genWireTarget()
 
 # generate the combination for the keypad phase

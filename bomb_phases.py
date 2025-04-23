@@ -238,8 +238,6 @@ class Wires(PhaseThread):
         while self._running:
             for i in range(len(self._component)):
                 wirecurrentVals[i] = self._component[i].value  # directly get each value
-                print(self._target)
-                print(wirecurrentVals)
             wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2) #Converts the list of true/false to an int for target val
 
             if wiredecimalVal == self._target:
