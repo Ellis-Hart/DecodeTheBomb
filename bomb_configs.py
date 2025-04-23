@@ -165,7 +165,7 @@ def genKeypadCombination():
                  "WIDELY": "BOUND",\
                  "ZAGGED": "YACHT" }
     # the rotation cipher key
-    rot = randint(1, 25)
+    rot = random.randint(1, 25)
 
     # pick a keyword and matching passphrase
     keyword, passphrase = choice(list(keywords.items()))
