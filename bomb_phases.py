@@ -272,32 +272,41 @@ class Button(PhaseThread):
 
     # runs the thread
     def run(self):
-        self._running = True
-        # set the RGB LED color
-        self._rgb[0].value = False if self._color == "R" else True
-        self._rgb[1].value = False if self._color == "G" else True
-        self._rgb[2].value = False if self._color == "B" else True
-        while (self._running):
-            # get the pushbutton's state
-            self._value = self._component.value
-            # it is pressed
-            if (self._value):
-                # note it
-                self._pressed = True
-            # it is released
+        while not self.defused and not self.exploded:
+            if not self.active:
+                time.sleep(0.1)
+                continue
+
+            current_time = self.get_time_fn()
+            minutes = current_time // 60
+            seconds = current_time % 60
+
+            # Determine current digit based on button color
+            if button_color == "R":
+                current_digit = str(seconds % 10)  # last digit of seconds
+            elif button_color == "G":
+                current_digit = str(seconds).zfill(2)[0]  # first digit of seconds
+            elif button_color == "B":
+                current_digit = str(minutes).zfill(2)[-1]  # last digit of minutes
             else:
-                # was it previously pressed?
-                if (self._pressed):
-                    # check the release parameters
-                    # for R, nothing else is needed
-                    # for G or B, a specific digit must be in the timer (sec) when released
-                    if (not self._target or self._target in self._timer._sec):
-                        self._defused = True
-                    else:
-                        self._failed = True
-                    # note that the pushbutton was released
-                    self._pressed = False
-            sleep(0.1)
+                current_digit = None
+
+            # If the button is pressed
+            if self.component_button_state.value:
+                self.set_status_fn("HOLDING...")
+                while self.component_button_state.value:
+                    time.sleep(0.05)
+                self.set_status_fn("RELEASED")
+
+                # Check if release occurred on correct digit
+                if current_digit == button_target:
+                    self.set_status_fn("DEFUSED")
+                    self.defused = True
+                else:
+                    self.set_status_fn("STRIKE")
+                    self.strike_fn()
+
+            time.sleep(0.1)
 
     # returns the pushbutton's state as a string
     def __str__(self):

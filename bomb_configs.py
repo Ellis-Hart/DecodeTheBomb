@@ -107,8 +107,8 @@ def genSerial():
     
     #Shuffle parts for added randomness
     random.shuffle(parts)
-    
-    return '-'.join(parts)
+    serial = '-'.join(parts)
+    return serial, year
 
 def genWireTarget():
     buildingNo = random.randint(0, 30) #Generates a random int from 0-30 to be the target val for wires
@@ -182,7 +182,7 @@ def genKeypadCombination():
 #  serial: the bomb's serial number
 #  toggles_target: the toggles phase defuse value
 #  wires_target: the wires phase defuse value
-serial = genSerial()
+serial, year = genSerial()
 toggles_target = 1 #placeholder
 wires_target, wires_hint = genWireTarget()
 
@@ -196,14 +196,20 @@ keyword, cipher_keyword, rot, keypad_target, passphrase = genKeypadCombination()
 
 # generate the color of the pushbutton (which determines how to defuse the phase)
 button_color = random.choice(["R", "G", "B"])
-# appropriately set the target (R is None)
-button_target = None
-# G is the first numeric digit in the serial number
-if (button_color == "G"):
-    button_target = [ n for n in serial if n.isdigit() ][0]
-# B is the last numeric digit in the serial number
-elif (button_color == "B"):
-    button_target = [ n for n in serial if n.isdigit() ][-1]
+
+# The button target is derived from the timer based on color:
+# R: last digit of seconds
+# G: first digit of seconds
+# B: minutes digit
+# We'll store which part of the time to match for use in the phase logic
+
+if button_color == "R":
+    button_target = year[-1]
+elif button_color == "G":
+    button_target = year[-2]
+elif button_color == "B":
+    button_target = year[0]
+
 
 if (DEBUG):
     print(f"Serial number: {serial}")
