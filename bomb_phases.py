@@ -238,6 +238,8 @@ class Wires(PhaseThread):
         while self._running:
             for i in range(len(self._component)):
                 wirecurrentVals[i] = self._component[i].value  # directly get each value
+                print(self._target)
+                print(wirecurrentVals)
 
             if wirecurrentVals == self._target:
                 self._defused = True
