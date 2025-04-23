@@ -306,30 +306,28 @@ class Button(PhaseThread):
 
 # the toggle switches phase
 class Toggles(PhaseThread):
-    def __init__(self, pins, name="Toggles"):
-        super().__init__(name)
-        self._value = ""
-        self._pins = pins 
+    def __init__(self, component, target, name="Toggles"):
+        super().__init__(name, component, target)
 
     # runs the thread
     def run(self):
+        togglecurrentVals = [0, 0, 0, 0]
         self._running = True
-        while True:
-            self._value = "".join([str(int(pin.value)) for pin in self._pins])
-            sleep(0.1)
-        self._running = False
+        
+        while self._running:
+            for i in range(len(self._component)):
+                togglecurrentVals[i] = self._component[i].value  # directly get each value
+            toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2)
 
+            if toggledecimalVal == self._target:
+                self._defused = True
+                self.running = False
+                return "DEFUSED"
+
+    # returns the toggle switches state as a string
     def __str__(self):
-        if self._value == "1101":
+        if (self._defused):
             return "DEFUSED"
-        else: 
-            return f"{self._value}/{int(self._value, 2)}"
-
-# Define the toggle pins
-toggle_pins = [DigitalInOut(i) for i in (board.D12, board.D16, board.D20, board.D21)]
-for pin in toggle_pins:
-    pin.direction = Direction.INPUT
-    pin.pull = Pull.DOWN
-
-#Toggles phase/thread
-toggles = Toggles(toggle_pins) 
+        else:
+            #TODO
+            return "NOT DEFUSED"
