@@ -240,8 +240,9 @@ class Wires(PhaseThread):
                 wirecurrentVals[i] = self._component[i].value  # directly get each value
                 print(self._target)
                 print(wirecurrentVals)
+            wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2) #Converts the list of true/false to an int for target val
 
-            if wirecurrentVals == self._target:
+            if wiredecimalVal == self._target:
                 self._defused = True
                 self.running = False
                 return "DEFUSED"
