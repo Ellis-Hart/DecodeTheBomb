@@ -258,15 +258,17 @@ class Wires(PhaseThread):
 class Button(PhaseThread):
     colors = ["R", "G", "B"]  # The button's possible colors
 
-    def __init__(self, state, rgb, year, name="Button"):
+    def __init__(self, state, rgb, year, color=None, target=None, timer=None, name="Button"):
         super().__init__(name)
         self._value = False
         self._state = state
         self._rgb = rgb
-        self.year = year  # Store the year (for extracting the target value)
-        self.button_color = None  # Store the randomly chosen button color
-        self.button_target = None  # Store the target value for defusal
-        self.defused = False  # Track if the bomb is defused or not
+        self.year = year
+        self.button_color = color  # Accept passed-in color
+        self.button_target = target  # Accept passed-in target
+        self._timer = timer  # Save the timer reference
+        self._defused = False
+
 
         # Ensure LEDs are initially turned off (before the button thread runs)
         self._rgb[0].value = True  # Red LED off
@@ -276,8 +278,9 @@ class Button(PhaseThread):
     def run(self):
         self._running = True
 
-        # Randomly choose a button color (R, G, or B) at the start
-        self.button_color = random.choice(Button.colors)
+        # If no button color was provided, choose one at random
+        if not self.button_color:
+            self.button_color = random.choice(Button.colors)
 
         # Set the RGB LEDs to the chosen color
         if self.button_color == "R":
@@ -293,25 +296,16 @@ class Button(PhaseThread):
             self._rgb[1].value = True   # Green LED off
             self._rgb[2].value = False  # Blue LED on
 
-        # Set the target value based on the button color
-        self.set_button_target()
+        # If no target was provided, calculate it based on the color
+        if not self.button_target:
+            self.set_button_target()
 
-        while not self.defused:
-            # Get the button state
+        while True:
             self._value = self._state.value
-
-            # Button color defusal logic
-            if self._value and not self.defused:
+            if self._value and not self._defused:
                 self.defuse_logic()
-
             sleep(0.1)
 
-        # If bomb is defused, turn off all LEDs
-        self._rgb[0].value = True  # Red LED off
-        self._rgb[1].value = True  # Green LED off
-        self._rgb[2].value = True  # Blue LED off
-
-        self._running = False
 
     def set_button_target(self):
         if self.button_color == "R":
