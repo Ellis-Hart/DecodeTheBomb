@@ -14,7 +14,7 @@ NUM_STRIKES = 5      # the total strikes allowed before the bomb "explodes"
 NUM_PHASES = 4       # the total number of initial active bomb phases
 
 # imports
-from random import randint, shuffle, choice, random
+import random
 from string import ascii_uppercase
 if (RPi):
     import board
