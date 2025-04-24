@@ -47,7 +47,7 @@ def setup_phases():
     # setup the jumper wires thread
     wires = Wires(component_wires, wires_target)
     # setup the pushbutton thread
-    button = Button(state, rgb, year, color, target, timer=timer)
+    button = Button(component_button_state, component_button_RGB, year, button_color, button_target, timer=timer)
     # bind the pushbutton to the LCD GUI so that its LED can be turned off when we quit
     gui.setButton(button)
     # setup the toggle switches thread
