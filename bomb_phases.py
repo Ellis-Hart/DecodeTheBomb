@@ -236,33 +236,38 @@ class Keypad(PhaseThread):
 class Wires(PhaseThread):
     def __init__(self, component, target, name="Wires"):
         super().__init__(name, component, target)
+        self._last_incorrect = [False] * len(component)  # Track strike per wire
 
-    # runs the thread
     def run(self):
         self._running = True
         wirecurrentVals = [1] * len(self._component)
 
         while self._running:
-            # We only check wire states when they change
             for i in range(len(self._component)):
                 wirecurrentVals[i] = self._component[i].value
 
             wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2)
 
-            # If the current wire configuration matches the target
             if wiredecimalVal == self._target:
                 self._defused = True
                 self._running = False
                 return
 
-            # Check for a wire pulled that should be connected
-            targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):]  # Ensure binary matches the wire setup
+            targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):]
+
             for i in range(len(wirecurrentVals)):
+                # If a wire that should be connected is pulled
                 if wirecurrentVals[i] == 0 and targetBits[i] == "1":
-                    self._failed = True
-                    break
+                    # Only strike once for this specific wire being pulled
+                    if not self._last_incorrect[i]:
+                        self._failed = True
+                        self._last_incorrect[i] = True
+                else:
+                    # Reset so it can strike again if the user plugs it back and pulls it again
+                    self._last_incorrect[i] = False
 
             sleep(0.1)
+
 
     # returns the jumper wires state as a string
     def __str__(self):
