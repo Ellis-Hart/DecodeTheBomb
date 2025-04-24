@@ -275,8 +275,6 @@ class Wires(PhaseThread):
     def __str__(self):
         if self._defused:
             return "DEFUSED"
-        elif self._failed:
-            return "FAILED"
         else:
             return (f"power source: {wires_hint}")
 
