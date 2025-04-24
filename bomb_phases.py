@@ -260,7 +260,7 @@ class Wires(PhaseThread):
                     self._failed = True
                     break #Stop checking further if an incorrect bit has changed
 
-            sleep(1.75) #How frequent user responses are checked for
+            sleep(2.5) #How frequent user responses are checked for
 
     # returns the jumper wires state as a string
     def __str__(self):
@@ -268,7 +268,7 @@ class Wires(PhaseThread):
             return "DEFUSED"
         else:
             #TODO
-            return (f"Power source - {wires_hint}")
+            return (f"power source: {wires_hint}")
 
 # the pushbutton phase
 class Button(PhaseThread):

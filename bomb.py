@@ -8,6 +8,9 @@
 from bomb_configs import *
 # import the phases
 from bomb_phases import *
+import pygame
+pygame.mixer.init()
+
 
 ###########
 # functions
@@ -92,7 +95,7 @@ def check_phases():
     # check the wires
     if (wires._running):
         # update the GUI
-        gui._lwires["text"] = f"Wires: {wires}"
+        gui._lwires["text"] = f"Wires {wires}"
         # the phase is defused -> stop the thread
         if (wires._defused):
             wires._running = False
@@ -154,6 +157,8 @@ def check_phases():
 def strike():
     global strikes_left
     
+    strike_sound = pygame.mixer.Sound("strike.wav")
+    strike_sound.play()
     # note the strike
     strikes_left -= 1
 
