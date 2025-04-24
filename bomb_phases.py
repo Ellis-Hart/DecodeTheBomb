@@ -272,7 +272,7 @@ class Wires(PhaseThread):
         elif self._failed:
             return "FAILED"
         else:
-            return "power source: {wires_hint}" 
+            return (f"power source: {wires_hint}")
 
 # the pushbutton phase
 class Button(PhaseThread):
