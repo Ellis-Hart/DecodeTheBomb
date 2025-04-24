@@ -243,32 +243,36 @@ class Wires(PhaseThread):
         wirecurrentVals = [1] * len(self._component)
 
         while self._running:
+            # We only check wire states when they change
             for i in range(len(self._component)):
                 wirecurrentVals[i] = self._component[i].value
 
             wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2)
 
+            # If the current wire configuration matches the target
             if wiredecimalVal == self._target:
                 self._defused = True
                 self._running = False
                 return
 
             # Check for a wire pulled that should be connected
-            targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):]  # Ensure 5-bit binary matches target int
+            targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):]  # Ensure binary matches the wire setup
             for i in range(len(wirecurrentVals)):
                 if wirecurrentVals[i] == 0 and targetBits[i] == "1":
                     self._failed = True
-                    break #Stop checking further if an incorrect bit has changed
+                    # The failure feedback will now happen after the wire state change
+                    return  # Exit the loop after failure feedback
 
-            sleep(2.5) #How frequent user responses are checked for
+            sleep(0.1)  # Keep this short so that wire states can be checked often, but no need for 2.5 sec
 
     # returns the jumper wires state as a string
     def __str__(self):
-        if (self._defused):
+        if self._defused:
             return "DEFUSED"
+        elif self._failed:
+            return "FAILED"
         else:
-            #TODO
-            return (f"power source: {wires_hint}")
+            return "power source: {wires_hint}" 
 
 # the pushbutton phase
 class Button(PhaseThread):
