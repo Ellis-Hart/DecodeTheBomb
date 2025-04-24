@@ -248,6 +248,8 @@ class Wires(PhaseThread):
 
             wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2)
 
+            print(wiredecimalVal)
+            print(self._target)
             if wiredecimalVal == self._target:
                 self._defused = True
                 self._running = False
