@@ -275,6 +275,7 @@ class Button(PhaseThread):
         self.button_target = target  # Accept passed-in target
         self._timer = timer  # Save the timer reference
         self._defused = False
+        self._status = "Active"
 
 
         # Ensure LEDs are initially turned off (before the button thread runs)
