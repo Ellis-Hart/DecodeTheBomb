@@ -260,7 +260,7 @@ class Wires(PhaseThread):
                     self._failed = True
                     break #Stop checking further if an incorrect bit has changed
 
-            sleep(0.1)
+            sleep(1.75) #How frequent user responses are checked for
 
     # returns the jumper wires state as a string
     def __str__(self):
