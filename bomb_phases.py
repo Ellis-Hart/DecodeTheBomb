@@ -284,34 +284,48 @@ class Button(PhaseThread):
 
     def run(self):
         self._running = True
+        prev_value = False  # Track previous button state
 
-        # If no button color was provided, choose one at random
         if not self.button_color:
             self.button_color = random.choice(Button.colors)
 
-        # Set the RGB LEDs to the chosen color
+        # Set LED color
         if self.button_color == "R":
-            self._rgb[0].value = False  # Red LED on
-            self._rgb[1].value = True   # Green LED off
-            self._rgb[2].value = True   # Blue LED off
+            self._rgb[0].value = False
+            self._rgb[1].value = True
+            self._rgb[2].value = True
         elif self.button_color == "G":
-            self._rgb[0].value = True   # Red LED off
-            self._rgb[1].value = False  # Green LED on
-            self._rgb[2].value = True   # Blue LED off
+            self._rgb[0].value = True
+            self._rgb[1].value = False
+            self._rgb[2].value = True
         elif self.button_color == "B":
-            self._rgb[0].value = True   # Red LED off
-            self._rgb[1].value = True   # Green LED off
-            self._rgb[2].value = False  # Blue LED on
+            self._rgb[0].value = True
+            self._rgb[1].value = True
+            self._rgb[2].value = False
 
-        # If no target was provided, calculate it based on the color
         if not self.button_target:
             self.set_button_target()
 
         while True:
             self._value = self._state.value
-            if self._value and not self._defused:
-                self.defuse_logic()
+
+            # Button just pressed
+            if self._value and not prev_value:
+                self._status = "Pressed"
+
+            # Button just released
+            elif not self._value and prev_value:
+                if not self._defused and self.timer_matches_target():
+                    self._defused = True
+                    self._status = "Defused"
+                    self.led_off()
+                elif not self._defused:
+                    self._status = "Released"  # Implementing failure later
+
+            prev_value = self._value
             sleep(0.1)
+
+
 
 
     def set_button_target(self):
@@ -322,15 +336,6 @@ class Button(PhaseThread):
         elif self.button_color == "B":
             self.button_target = str(self.year)[0]   # First digit of the year
 
-    def defuse_logic(self):
-        # Check if the timer value matches the button target
-        if self.timer_matches_target():
-            self._defused = True
-            # Turn off all LEDs when the bomb is defused
-            self._rgb[0].value = True  # Red LED off
-            self._rgb[1].value = True  # Green LED off
-            self._rgb[2].value = True  # Blue LED off
-
     def timer_matches_target(self):
         current_time = self.get_current_time()
         if current_time[-1] == self.button_target:
@@ -339,9 +344,16 @@ class Button(PhaseThread):
 
     def get_current_time(self):
         return str(self._timer._min) + str(self._timer._sec)
+    
+    def led_off(self):
+        self._rgb[0].value = True
+        self._rgb[1].value = True
+        self._rgb[2].value = True
+
+
 
     def __str__(self):
-        return "Pressed" if self._value else "Released"
+        return self._status
 
 
 
