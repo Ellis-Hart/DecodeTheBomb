@@ -248,11 +248,8 @@ class Wires(PhaseThread):
 
             wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2)
 
-            print(wiredecimalVal)
-            print(self._target)
             if wiredecimalVal == self._target:
                 self._defused = True
-                self._running = False
                 return
 
             targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):]
