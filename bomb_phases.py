@@ -239,19 +239,28 @@ class Wires(PhaseThread):
 
     # runs the thread
     def run(self):
-        wirecurrentVals = [1, 1, 1, 1, 1]
         self._running = True
-        
+        wirecurrentVals = [1] * len(self._component)
+
         while self._running:
             for i in range(len(self._component)):
-                wirecurrentVals[i] = self._component[i].value  # directly get each value
-            wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2) #Converts the list of true/false to an int for target val
+                wirecurrentVals[i] = self._component[i].value
+
+            wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2)
 
             if wiredecimalVal == self._target:
                 self._defused = True
-                self.running = False
-                return "DEFUSED"
+                self._running = False
+                return
 
+            # Check for a wire pulled that should be connected
+            targetBits = f"{self._target:05b}"  # Ensure 5-bit binary
+            for i in range(len(wirecurrentVals)):
+                if wirecurrentVals[i] == 0 and targetBits[i] == "1":
+                    self._failed = True
+                    break #Stop checking further if an incorrect bit has changed
+
+            sleep(0.1)
 
     # returns the jumper wires state as a string
     def __str__(self):
@@ -259,7 +268,7 @@ class Wires(PhaseThread):
             return "DEFUSED"
         else:
             #TODO
-            return (f"Power source: {wires_hint}")
+            return (f"Power source - {wires_hint}")
 
 # the pushbutton phase
 class Button(PhaseThread):
@@ -272,7 +281,7 @@ class Button(PhaseThread):
         self._rgb = rgb
         self.year = year
         self.button_color = color  # Accept passed-in color
-        self.button_target = target  # Accept passed-in target
+        self.button_target = target  # Accept passed-in target	
         self._timer = timer  # Save the timer reference
         self._defused = False
         self._status = "Active"
@@ -321,7 +330,8 @@ class Button(PhaseThread):
                     self._status = "Defused"
                     self.led_off()
                 elif not self._defused:
-                    self._status = "Released"  # Implementing failure later
+                    self._status = "Released"
+                    self._failed = True
 
             prev_value = self._value
             sleep(0.1)
