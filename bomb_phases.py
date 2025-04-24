@@ -281,7 +281,7 @@ class Button(PhaseThread):
         self._rgb = rgb
         self.year = year
         self.button_color = color  # Accept passed-in color
-        self.button_target = target  # Accept passed-in target	
+        self.button_target = target  # Accept passed-in target
         self._timer = timer  # Save the timer reference
         self._defused = False
         self._status = "Active"
