@@ -260,10 +260,9 @@ class Wires(PhaseThread):
             for i in range(len(wirecurrentVals)):
                 if wirecurrentVals[i] == 0 and targetBits[i] == "1":
                     self._failed = True
-                    # The failure feedback will now happen after the wire state change
-                    return  # Exit the loop after failure feedback
+                    break
 
-            sleep(0.1)  # Keep this short so that wire states can be checked often, but no need for 2.5 sec
+            sleep(0.1)
 
     # returns the jumper wires state as a string
     def __str__(self):
