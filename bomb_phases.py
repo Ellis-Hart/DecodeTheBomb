@@ -254,7 +254,7 @@ class Wires(PhaseThread):
                 return
 
             # Check for a wire pulled that should be connected
-            targetBits = f"{self._target:05b}"  # Ensure 5-bit binary
+            targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):]  # Ensure 5-bit binary matches target int
             for i in range(len(wirecurrentVals)):
                 if wirecurrentVals[i] == 0 and targetBits[i] == "1":
                     self._failed = True
