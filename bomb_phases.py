@@ -380,46 +380,40 @@ class Toggles(PhaseThread):
         super().__init__(name, component, target)
         self._last_incorrect = [False] * len(component)  # Track strike per toggle
         self._initial_check = True  # Flag to ignore the first check
-        self._user_interacted = False  # Track if the user has interacted with the toggles
 
     def run(self):
         togglecurrentVals = [0] * len(self._component)  # All toggles start in off position
         self._running = True
 
         while self._running:
-            # Collect current toggle values
             for i in range(len(self._component)):
                 togglecurrentVals[i] = self._component[i].value
 
             toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2)  # Converts list of values into decimal int
 
-            # If toggles match the target, defuse the bomb
+            # Check if toggles match the target, defuse if so
             if toggledecimalVal == self._target:
                 self._defused = True
-                self._running = False  # Stop the thread after defuse
                 return
 
-            # If the user has interacted with the toggles, we can start strike detection
-            if self._user_interacted:
-                targetBits = f"{self._target:0{len(self._component)}b}"  # Convert target decimal val into binary string
-
-                # Tracking for strikes after the first check
-                for i in range(len(togglecurrentVals)):
-                    if togglecurrentVals[i] != int(targetBits[i]):
-                        if not self._last_incorrect[i]:  # Strike only once per incorrect toggle
-                            self._failed = True
-                            self._last_incorrect[i] = True  # Mark this toggle as incorrect
-                    else:
-                        self._last_incorrect[i] = False  # Reset so it can strike again if flipped back correctly
-
-            # First cycle: If no interaction has occurred, we skip the strike check
+            # Skip the first check to avoid immediate strikes
             if self._initial_check:
                 self._initial_check = False  # Disable first check after the first iteration
-                self._user_interacted = any(togglecurrentVals)  # Check if any toggle is non-zero (indicating interaction)
-                sleep(1)  # Wait before checking again (to allow for any interaction)
+                sleep(1)  # Wait before checking again
                 continue
 
-            sleep(0.1)  # Sleep to avoid too frequent checks
+            targetBits = f"{self._target:0{len(self._component)}b}"  # Convert target decimal val into binary string
+
+            # Tracking for strikes after the first check
+            for i in range(len(togglecurrentVals)):
+                if togglecurrentVals[i] != int(targetBits[i]):
+                    if not self._last_incorrect[i]:  # Strike only once per incorrect toggle
+                        self._failed = True
+                        self._last_incorrect[i] = True  # Mark this toggle as incorrect
+                else:
+                    self._last_incorrect[i] = False  # Reset so it can strike again if flipped back correctly
+
+            sleep(0.1)
 
     # returns the toggle switches state as a string
     def __str__(self):
