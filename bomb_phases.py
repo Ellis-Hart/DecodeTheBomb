@@ -383,6 +383,7 @@ class Toggles(PhaseThread):
     def run(self):
         togglecurrentVals = [0] * len(self._component) #All toggles start in off position
         self._running = True
+        self._initial_check = True  # Flag to ignore the first check
 
         while self._running:
             for i in range(len(self._component)):
@@ -393,6 +394,12 @@ class Toggles(PhaseThread):
             if toggledecimalVal == self._target:
                 self._defused = True
                 return
+            
+            # Skip the first check at startup to avoid immediate strikes
+            if self._initial_check:
+                self._initial_check = False  # Set to False after the first check
+                sleep(0.1)  # Wait before checking again
+                continue
 
             targetBits = f"{self._target:04b}" #Converts target decimal val into binary string
 
