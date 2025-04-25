@@ -110,6 +110,17 @@ def genSerial():
     serial = '-'.join(parts)
     return serial, year
 
+def genSysModel():
+    while True:
+        digits = [random.randint(0, 9) for i in range(3)]  # Generate 3 digits
+        total = sum(digits)
+        if 1 <= total <= 15:
+            model_str = "".join(str(d) for d in digits)
+            SysModel = f"{model_str}BOMBv4.2"
+            toggles_target = total
+            return SysModel, toggles_target
+
+
 def genWireTarget():
     buildingNo = random.randint(1, 31) #Generates a random int from 0-30 to be the target val for wires
     buildings = [ "Athletic Offices", "Baseball Field", "Beach Volleyball Complex", "Aquatic Center", "Recreation Center", "Cass Gymnasium",
@@ -183,7 +194,7 @@ def genKeypadCombination():
 #  toggles_target: the toggles phase defuse value
 #  wires_target: the wires phase defuse value
 serial, year = genSerial()
-toggles_target = 1 #placeholder
+SysModel, toggles_target = genSysModel()
 wires_target, wires_hint = genWireTarget()
 
 # generate the combination for the keypad phase
@@ -222,7 +233,7 @@ if (DEBUG):
 boot_text = f"Booting...\n\x00\x00"\
             f"*Kernel v3.1.4-159 loaded.\n"\
             f"Initializing subsystems...\n\x00"\
-            f"*System model: 102BOMBv4.2\n"\
+            f"*System model: {SysModel}\n"\
             f"*Serial number: {serial}\n"\
             f"Encrypting keypad...\n\x00"\
             f"*Keyword: {cipher_keyword}; key: {rot}\n"\
