@@ -225,7 +225,7 @@ boot_text = f"Booting...\n\x00\x00"\
             f"*System model: {SysModel}\n"\
             f"*Serial number: {serial}\n"\
             f"Encrypting keypad...\n\x00"\
-            f"*Keyword: {cipher_keyword}; key: {rot}\n"\
+            f"*Keyword: {cipher_keyword}\n"\
             f"*{' '.join(string.ascii_uppercase)}\n"\
             f"*{' '.join([str(n % 10) for n in range(26)])}\n"\
             f"Rendering phases...\x00"
