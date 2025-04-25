@@ -102,12 +102,12 @@ class Lcd(Frame):
         if success:
             self._lmessage = tkinter.Label(self, text="You defused the Bomb!", font=("Courier New", 24), fg="green")
             self._lmessage.grid(row=0, column=1, pady=50)
-            win_sound = pygame.mixer.Sound("win.wav")
+            win_sound = pygame.mixer.Sound("win.mp3")
             win_sound.play()
         else:
             self._lmessage = tkinter.Label(self, text="You exploded!", font=("Courier New", 24), fg="green")
             self._lmessage.grid(row=0, column=1, pady=50)
-            loss_sound = pygame.mixer.Sound("loss.wav")
+            loss_sound = pygame.mixer.Sound("loss.mp3")
             loss_sound.play()
         
         # the retry button
