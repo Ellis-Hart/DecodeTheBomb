@@ -379,44 +379,45 @@ class Toggles(PhaseThread):
     def __init__(self, component, target, name="Toggles"):
         super().__init__(name, component, target)
         self._last_incorrect = [False] * len(component)  # Track strike per toggle
+        self._initial_check = True  # Flag to ignore the first check
 
     def run(self):
-        togglecurrentVals = [0] * len(self._component) #All toggles start in off position
+        togglecurrentVals = [0] * len(self._component)  # All toggles start in off position
         self._running = True
-        self._initial_check = True  # Flag to ignore the first check
 
         while self._running:
             for i in range(len(self._component)):
                 togglecurrentVals[i] = self._component[i].value
 
-            toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2) #Converts list of values into decimal int
+            toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2)  # Converts list of values into decimal int
 
+            # Check if toggles match the target, defuse if so
             if toggledecimalVal == self._target:
                 self._defused = True
                 return
-            
-            # Skip the first check at startup to avoid immediate strikes
+
+            # Skip the first check to avoid immediate strikes
             if self._initial_check:
-                self._initial_check = False  # Set to False after the first check
+                self._initial_check = False  # Disable first check after the first iteration
                 sleep(0.1)  # Wait before checking again
                 continue
 
-            targetBits = f"{self._target:04b}" #Converts target decimal val into binary string
+            targetBits = f"{self._target:0{len(self._component)}b}"  # Convert target decimal val into binary string
 
-            #Tracking for strikes
+            # Tracking for strikes after the first check
             for i in range(len(togglecurrentVals)):
                 if togglecurrentVals[i] != int(targetBits[i]):
-                    if not self._last_incorrect[i]:
+                    if not self._last_incorrect[i]:  # Strike only once per incorrect toggle
                         self._failed = True
-                        self._last_incorrect[i] = True
+                        self._last_incorrect[i] = True  # Mark this toggle as incorrect
                 else:
-                    self._last_incorrect[i] = False
+                    self._last_incorrect[i] = False  # Reset so it can strike again if flipped back correctly
 
             sleep(0.1)
 
     # returns the toggle switches state as a string
     def __str__(self):
-        if (self._defused):
+        if self._defused:
             return "DEFUSED"
         else:
             return "Active"
