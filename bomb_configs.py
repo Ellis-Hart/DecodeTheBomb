@@ -91,7 +91,7 @@ if (RPi):
 # generates the bomb's serial number
 
 def genSerial():
-    #Generates a random year to hide within serial number. Used as a clue for keypad.
+    #Generates a random year to hide within serial number. Used as a clue for button.
     year = str(random.randint(2020, 2025))
     
     #Generate random segments
@@ -110,6 +110,7 @@ def genSerial():
     serial = '-'.join(parts)
     return serial, year
 
+#Generate the system model string, used for toggles puzzle
 def genSysModel():
     while True:
         digits = [random.randint(0, 9) for i in range(3)]  # Generate 3 digits
@@ -120,7 +121,7 @@ def genSysModel():
             toggles_target = total
             return SysModel, toggles_target
 
-
+#Generate the target value for wires puzzle based on building numbers according to the UTampa campus map
 def genWireTarget():
     buildingNo = random.randint(1, 31) #Generates a random int from 0-30 to be the target val for wires
     buildings = [ "Athletic Offices", "Baseball Field", "Beach Volleyball Complex", "Aquatic Center", "Recreation Center", "Cass Gymnasium",
@@ -139,6 +140,7 @@ MORSE_CODE_DICT = {
     '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.'
 }
 
+#Generate the keypad solution
 def genKeypadCombination():
     # Encrypts a keyword using Morse Code
     def morse_encrypt(keyword):

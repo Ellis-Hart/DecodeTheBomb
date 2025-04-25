@@ -99,11 +99,13 @@ class Lcd(Frame):
 
         # reconfigure the GUI
         
+        #If the user defused the bomb:
         if success:
             self._lmessage = tkinter.Label(self, text="You defused the Bomb!", font=("Courier New", 24), fg="green")
             self._lmessage.grid(row=0, column=1, pady=50)
             win_sound = pygame.mixer.Sound("win.mp3")
             win_sound.play()
+        #If they struck out:
         else:
             self._lmessage = tkinter.Label(self, text="You exploded!", font=("Courier New", 24), fg="green")
             self._lmessage.grid(row=0, column=1, pady=50)
@@ -255,12 +257,14 @@ class Wires(PhaseThread):
         self._running = True
         wirecurrentVals = [1] * len(self._component) #All wires start in on/true position
 
+        #Update current value storage
         while self._running:
             for i in range(len(self._component)):
                 wirecurrentVals[i] = self._component[i].value
 
             wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2) #Converts list of values into decimal int
 
+            #Success
             if wiredecimalVal == self._target:
                 self._defused = True
                 return
@@ -299,9 +303,9 @@ class Button(PhaseThread):
         self._state = state
         self._rgb = rgb
         self.year = year
-        self.button_color = color  # Accept passed-in color
-        self.button_target = target  # Accept passed-in target
-        self._timer = timer  # Save the timer reference
+        self.button_color = color
+        self.button_target = target
+        self._timer = timer
         self._defused = False
         self._status = "Active"
 
@@ -375,11 +379,11 @@ class Button(PhaseThread):
     def get_current_time(self):
         return str(self._timer._min) + str(self._timer._sec)
     
+    #Turns led off after puzzle completion
     def led_off(self):
         self._rgb[0].value = True
         self._rgb[1].value = True
         self._rgb[2].value = True
-
 
 
     def __str__(self):
