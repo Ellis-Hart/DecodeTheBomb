@@ -1,7 +1,7 @@
 #################################
 # CSC 102 Defuse the Bomb Project
 # Main program
-# Team: Ellis, Brad, Sebby
+# Team: Ellis, Brad, Seb
 #################################
 
 # import the configs
