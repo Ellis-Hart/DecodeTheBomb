@@ -73,6 +73,9 @@ def check_phases():
         gui._ltimer["text"] = f"Time left: {timer}"
     else:
         # the countdown has expired -> explode!
+        #Play explosion sound
+        explode_sound = pygame.mixer.Sound("explosion.mp3")
+        explode_sound.play()
         # turn off the bomb and render the conclusion GUI
         turn_off()
         gui.after(100, gui.conclusion, False)
