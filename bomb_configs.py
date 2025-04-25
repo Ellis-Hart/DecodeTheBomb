@@ -130,61 +130,52 @@ def genWireTarget():
                   "Campus Safety", "Cass Building", "Central Receiving"]
     buildingClue = buildings[buildingNo-1]
     return buildingNo, buildingClue
-    
 
-# generates the keypad combination from a keyword and rotation key
+# Morse Code Dictionary for letters
+MORSE_CODE_DICT = {
+    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
+    'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+    'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
+    '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.'
+}
+
 def genKeypadCombination():
-    # encrypts a keyword using a rotation cipher
-    def encrypt(keyword, rot):
-        cipher = ""
+    # Encrypts a keyword using Morse Code
+    def morse_encrypt(keyword):
+        morse_keyword = ""
+        for letter in keyword.upper():
+            if letter in MORSE_CODE_DICT:
+                morse_keyword += MORSE_CODE_DICT[letter] + " "  # Add space between each Morse code letter
+        return morse_keyword.strip()  # Strip trailing space
 
-        # encrypt each letter of the keyword using rot
-        for c in keyword:
-            cipher += chr((ord(c) - 65 + rot) % 26 + 65)
-
-        return cipher
-
-    # returns the keypad digits that correspond to the passphrase
-    def digits(passphrase):
+    # Returns the keypad digits that correspond to the keyword
+    def digits(keyword):
         combination = ""
         keys = [ None, None, "ABC", "DEF", "GHI", "JKL", "MNO", "PRS", "TUV", "WXY" ]
-
-        # process each character of the keyword
-        for c in passphrase:
+        
+        # Process each character of the keyword
+        for c in keyword.upper():
             for i, k in enumerate(keys):
-                if (k and c in k):
-                    # map each character to its digit equivalent
+                if k and c in k:
+                    # Map each character to its digit equivalent
                     combination += str(i)
-
+        
         return combination
 
-    # the list of keywords and matching passphrases
-    keywords = { "BANDIT": "RIVER",\
-                 "BUCKLE": "FADED",\
-                 "CANOPY": "FOXES",\
-                 "DEBATE": "THROW",\
-                 "FIERCE": "TRICK",\
-                 "GIFTED": "CYCLE",\
-                 "IMPACT": "STOLE",\
-                 "LONELY": "TOADY",\
-                 "MIGHTY": "ALOOF",\
-                 "NATURE": "CARVE",\
-                 "REBORN": "CLIMB",\
-                 "RECALL": "FEIGN",\
-                 "SYSTEM": "LEAVE",\
-                 "TAKING": "SPINY",\
-                 "WIDELY": "BOUND",\
-                 "ZAGGED": "YACHT" }
-    # the rotation cipher key
-    rot = random.randint(1, 25)
+    # List of possible keywords
+    keywords = [ "ARRAY", "BYTE", "CACHE", "CODING", "COMPILE", "DATABASE", "DEBUG", "LIBRARY", "NETWORK", "PYTHON", 
+                 "REBOOT", "SERVER", "SPARTAN", "SYSTEM", "TAMPA", "ZIPBOMB" ]
 
-    # pick a keyword and matching passphrase
-    keyword, passphrase = random.choice(list(keywords.items()))
-    # encrypt the passphrase and get its combination
-    cipher_keyword = encrypt(keyword, rot)
-    combination = digits(passphrase)
+    # Randomly select a keyword from the list
+    keyword = random.choice(keywords)
 
-    return keyword, cipher_keyword, rot, combination, passphrase
+    # Encrypt the keyword using Morse Code
+    cipher_keyword = morse_encrypt(keyword)
+
+    # Generate the corresponding keypad combination from the keyword
+    keypad_target = digits(keyword)
+
+    return keyword, cipher_keyword, keypad_target
 
 ###############################
 # generate the bomb's specifics
@@ -198,12 +189,10 @@ SysModel, toggles_target = genSysModel()
 wires_target, wires_hint = genWireTarget()
 
 # generate the combination for the keypad phase
-#  keyword: the plaintext keyword for the lookup table
-#  cipher_keyword: the encrypted keyword for the lookup table
-#  rot: the key to decrypt the keyword
+#  keyword: the plaintext keyword
+#  cipher_keyword: morse code combination
 #  keypad_target: the keypad phase defuse value (combination)
-#  passphrase: the target plaintext passphrase
-keyword, cipher_keyword, rot, keypad_target, passphrase = genKeypadCombination()
+keyword, cipher_keyword, keypad_target = genKeypadCombination()
 
 # generate the color of the pushbutton (which determines how to defuse the phase)
 button_color = random.choice(["R", "G", "B"])
