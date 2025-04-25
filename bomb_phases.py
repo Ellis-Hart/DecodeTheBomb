@@ -240,20 +240,21 @@ class Wires(PhaseThread):
 
     def run(self):
         self._running = True
-        wirecurrentVals = [1] * len(self._component)
+        wirecurrentVals = [1] * len(self._component) #All wires start in on/true position
 
         while self._running:
             for i in range(len(self._component)):
                 wirecurrentVals[i] = self._component[i].value
 
-            wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2)
+            wiredecimalVal = int("".join(str(int(bit)) for bit in wirecurrentVals), 2) #Converts list of values into decimal int
 
             if wiredecimalVal == self._target:
                 self._defused = True
                 return
 
-            targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):]
+            targetBits = f"{self._target:0{len(self._component)}b}"[-len(self._component):] #Converts target decimal val into binary string
 
+            #Tracking for strikes
             for i in range(len(wirecurrentVals)):
                 # If a wire that should be connected is pulled
                 if wirecurrentVals[i] == 0 and targetBits[i] == "1":
@@ -377,26 +378,38 @@ class Button(PhaseThread):
 class Toggles(PhaseThread):
     def __init__(self, component, target, name="Toggles"):
         super().__init__(name, component, target)
+        self._last_incorrect = [False] * len(component)  # Track strike per toggle
 
-    # runs the thread
     def run(self):
-        togglecurrentVals = [0, 0, 0, 0]
+        togglecurrentVals = [0] * len(self._component) #All toggles start in off position
         self._running = True
-        
+
         while self._running:
             for i in range(len(self._component)):
-                togglecurrentVals[i] = self._component[i].value  # directly get each value
-            toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2)
+                togglecurrentVals[i] = self._component[i].value
+
+            toggledecimalVal = int("".join(str(int(bit)) for bit in togglecurrentVals), 2) #Converts list of values into decimal int
 
             if toggledecimalVal == self._target:
                 self._defused = True
-                self.running = False
-                return "DEFUSED"
+                return
+
+            targetBits = f"{self._target:04b}" #Converts target decimal val into binary string
+
+            #Tracking for strikes
+            for i in range(len(togglecurrentVals)):
+                if togglecurrentVals[i] != int(targetBits[i]):
+                    if not self._last_incorrect[i]:
+                        self._failed = True
+                        self._last_incorrect[i] = True
+                else:
+                    self._last_incorrect[i] = False
+
+            sleep(0.1)
 
     # returns the toggle switches state as a string
     def __str__(self):
         if (self._defused):
             return "DEFUSED"
         else:
-            #TODO
-            return ""
+            return "Active"
