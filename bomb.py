@@ -136,6 +136,10 @@ def check_phases():
     gui._lstrikes["text"] = f"Strikes left: {strikes_left}"
     # too many strikes -> explode!
     if (strikes_left == 0):
+        #Play explosion sound
+        explode_sound = pygame.mixer.Sound("explosion.wav")
+        explode_sound.play()
+        
         # turn off the bomb and render the conclusion GUI
         turn_off()
         gui.after(1000, gui.conclusion, False)
