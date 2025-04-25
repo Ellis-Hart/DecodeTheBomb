@@ -399,7 +399,7 @@ class Toggles(PhaseThread):
             # Skip the first check to avoid immediate strikes
             if self._initial_check:
                 self._initial_check = False  # Disable first check after the first iteration
-                sleep(1)  # Wait before checking again (to allow for any interaction)
+                sleep(0.1)  # Wait before checking again (to allow for any interaction)
                 continue
 
             targetBits = f"{self._target:0{len(self._component)}b}"  # Convert target decimal val into binary string
