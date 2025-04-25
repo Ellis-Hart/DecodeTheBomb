@@ -379,7 +379,7 @@ class Toggles(PhaseThread):
     def __init__(self, component, target, name="Toggles"):
         super().__init__(name, component, target)
         self._last_incorrect = [False] * len(component)  # Track strike per toggle
-        self._initial_check = True  # Flag to ignore the first check
+        self._initial_check = True  # Flag to skip the first check
 
     def run(self):
         togglecurrentVals = [0] * len(self._component)  # All toggles start in off position
@@ -399,7 +399,7 @@ class Toggles(PhaseThread):
             # Skip the first check to avoid immediate strikes
             if self._initial_check:
                 self._initial_check = False  # Disable first check after the first iteration
-                sleep(1)  # Wait before checking again
+                sleep(1)  # Wait before checking again (to allow for any interaction)
                 continue
 
             targetBits = f"{self._target:0{len(self._component)}b}"  # Convert target decimal val into binary string
@@ -413,7 +413,7 @@ class Toggles(PhaseThread):
                 else:
                     self._last_incorrect[i] = False  # Reset so it can strike again if flipped back correctly
 
-            sleep(0.1)
+            sleep(0.1)  # Sleep to avoid too frequent checks
 
     # returns the toggle switches state as a string
     def __str__(self):
